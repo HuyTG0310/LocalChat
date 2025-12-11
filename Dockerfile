@@ -28,4 +28,4 @@ COPY --from=build /app/publish .
 ENV ASPNETCORE_URLS=http://+:$PORT
 
 # Run Blazor Server app
-ENTRYPOINT ["dotnet", "web_blazor_server.dll"]
+ENTRYPOINT ["dotnet", "MiniChat.dll"]
