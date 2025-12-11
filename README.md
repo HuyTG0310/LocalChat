@@ -3,7 +3,6 @@
 Một ứng dụng nhắn tin thời gian thực (Real-time Chat Interface) đơn giản nhưng đầy đủ tính năng, được xây dựng bằng **ASP.NET Core Blazor Server**. Dự án mô phỏng cuộc trò chuyện với một Bot tự động (Khoa Bug) với các tương tác mượt mà như người thật.
 
 ![Demo Screenshot](wwwroot/demo.jpg)
-*(Bạn nhớ chụp ảnh màn hình web của bạn và thay link ảnh vào đây nhé)*
 
 ## 🚀 Tính năng nổi bật (Key Features)
 
