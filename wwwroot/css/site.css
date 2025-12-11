@@ -1,0 +1,70 @@
+/* container của 3 dấu chấm */
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    height: 10px;
+}
+
+
+/* định dạng từng dấu chấm */
+.typing-dot {
+    width: 6px;
+    height: 6px;
+    margin: 0 2px;
+    background-color: #6c757d;
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: typingBounce 1.4s infinite ease-in-out both;
+}
+
+/* tạo độ trễ để nhảy lệch nhịp nhau */
+.typing-dot:nth-child(1) {
+    animation-delay: -0.32s;
+}
+.typing-dot:nth-child(2) {
+    animation-delay: -0.16s;
+}
+.typing-dot:nth-child(3) {
+    animation-delay: 0s;
+}
+
+/* định nghĩa chuyển động nảy */
+@keyframes typingBounce {
+    0%, 80%, 100% {
+        transform: scale(0);
+    }
+    40% {
+        transform: scale(1);
+    }
+}
+
+
+/* Class cho chấm tròn xanh */
+.online-indicator {
+    width: 10px;
+    height: 10px;
+    background-color: #28a745; /* Màu xanh lá chuẩn Bootstrap */
+    border-radius: 50%;
+    display: inline-block;
+    
+    /* Gọi animation tên là 'pulse-green', chạy trong 2s, lặp vô hạn */
+    animation: pulse-green 2s infinite;
+}
+
+/* Định nghĩa chuyển động tỏa ra */
+@keyframes pulse-green {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); /* Bóng đậm sát viền */
+    }
+    
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(40, 167, 69, 0); /* Bóng lan ra 6px và mờ dần về 0 */
+    }
+    
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+    }
+}

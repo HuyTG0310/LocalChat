@@ -1,0 +1,142 @@
+@page "/"
+@using Microsoft.AspNetCore.Components.Sections
+@using Microsoft.JSInterop
+@using System.Threading.Tasks
+
+@inject IJSRuntime JS
+
+<div class="d-flex flex-column vh-100 overflow-hidden bg-white-subtle">
+
+    <div class="d-flex align-items-center p-2 bg-light"
+        style="height: 65px; border-bottom: 2px solid rgb(136, 133, 133);">
+        <!-- Avatar -->
+        <img src="khoa2.jpg" class="rounded-circle me-3" width="50" height="50" />
+
+        <!-- Name + Status -->
+        <div>
+            <div class="fw-bold fs-5">Khoa Bug</div>
+            <div class="text-success small d-flex align-items-center">
+                <span class="online-indicator me-2"></span>
+                Online
+            </div>
+        </div>
+    </div>
+
+    <div id="chatBox" class="flex-grow-1 overflow-auto pb-3" style="background-image: url(bg_ngang.jpg);">
+        @foreach (var m in MessageHistory)
+        {
+            <div class="d-flex @(m.isSentByUser ? "justify-content-end mt-3 me-3" : "justify-content-start ms-3")">
+                @if (!m.isSentByUser)
+                {
+                    <img src="khoa2.jpg" class="rounded-circle me-3" width="40" height="40" />
+                }
+                <div class="p-2 px-3 rounded-4 text-break @(m.isSentByUser ? "text-white" : "")"
+                    style="background-color: @(m.isSentByUser ? "#2d4b9f" : "#e9ecef") ; max-width:70%;">
+                    @m.text
+                </div>
+            </div>
+        }
+
+        @* 0d6efd e9ecef*@
+
+
+        @if (isBotTyping)
+        {
+            <div class="d-flex justify-content-start ms-3 mb-3">
+                <img src="khoa2.jpg" class="rounded-circle me-3" width="40" height="40" />
+                <div class="p-3 rounded-4" style="background-color: #e9ecef; width: fit-content;">
+                    <div class="typing-indicator">
+                        <span class="typing-dot"></span>
+                        <span class="typing-dot"></span>
+                        <span class="typing-dot"></span>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+
+
+    <div class="py-3" style="background-color: #feceda;">
+        <form class="d-flex justify-content-center align-items-end" @onsubmit="SendMessage">
+            <textarea id="chatInput" @bind="message" @bind:event="oninput" @onkeypress="CheckEnterKey"
+                class="form-control mx-3" rows="1"
+                style="resize: none; overflow: hidden; max-height: 150px; min-height: 38px; background-color: #d6bdc3;"></textarea>
+            <button type="submit" class="btn btn-primary me-3"><i class="fas fa-paper-plane"></i></button>
+        </form>
+
+    </div>
+
+</div>
+
+
+
+@code {
+
+    bool isBotTyping = false;
+    public class Message
+    {
+        public string text { get; set; }
+        public bool isSentByUser { get; set; }
+
+        public Message(string txt, bool sentBy)
+        {
+            this.text = txt;
+            this.isSentByUser = sentBy;
+        }
+    }
+
+    List<Message> MessageHistory = new List<Message>();
+
+    string message = "";
+
+    List<string> RandomReplies = new List<string>{
+"Tao Khoa nè", "Ừ vẫn khỏe", "M dạo này thế nào", "Đang ở dưới quê", "Cỡ này làm biếng vc :vv", "Thằng Khôi dạo này sao rồi", "Buồn ngủ", "Mấy nay chán vl ko biết làm gì", "Bàn phím mới nặng vãi đái", "Nghe nói ông Lợi học .NET à", "Nghe nói ông Nhân 0.5 PE PRJ", "Lọ", "Mấy nay trời lạnh vc", "Từ giờ t sẽ cố gắng", "M biết bài trình ko", "t thả ông Sáng ra bây giờ", "đang học Nhật 1 với ông Phúc nè", "Mấy nay thức khuya nổi mụn vc", "Mấy nay có tập gym k", "Ừ t biết rồi", "Để t gáng", "Thua", "M có nghe chuyện ma chú 3 Duy k", "Dạo này t bị nghiện nhạc Sơn Tùng", "Mấy nay nghe nhạc rap của Baby Red cuốn vl"
+};
+
+    Random rd = new Random();
+
+    async Task SendMessage()
+    {
+        if (!string.IsNullOrWhiteSpace(message))
+        {
+            MessageHistory.Add(new Message(message, true));
+            message = "";
+
+            await JS.InvokeVoidAsync("resetTextArea", "chatInput");
+
+
+            await Task.Delay(10);
+            await JS.InvokeVoidAsync("scrollChatToBottom", "chatBox");
+
+            isBotTyping = true;
+            StateHasChanged();
+
+            await Task.Delay(10);
+            await JS.InvokeVoidAsync("scrollChatToBottom", "chatBox");
+
+
+            await Task.Delay(1500 + rd.Next(0, 1000));
+            isBotTyping = false;
+            MessageHistory.Add(new Message(RandomReplies[rd.Next(RandomReplies.Count)], false));
+        }
+    }
+
+    async Task CheckEnterKey(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !e.ShiftKey)
+        {
+            await SendMessage();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Truyền thêm tham số thứ 2 là "chatBox"
+            await JS.InvokeVoidAsync("initializeChatInput", "chatInput", "chatBox");
+        }
+    }
+
+}
