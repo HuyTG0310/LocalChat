@@ -25,7 +25,7 @@
     <div id="chatBox" class="flex-grow-1 overflow-auto pb-3" style="background-image: url(bg_ngang.jpg);">
         @foreach (var m in MessageHistory)
         {
-            <div class="d-flex @(m.isSentByUser ? "justify-content-end mt-3 me-3" : "justify-content-start ms-3")">
+            <div class="d-flex @(m.isSentByUser ? "justify-content-end my-3 me-3" : "justify-content-start ms-3")">
                 @if (!m.isSentByUser)
                 {
                     <img src="khoa2.jpg" class="rounded-circle me-3" width="40" height="40" />
